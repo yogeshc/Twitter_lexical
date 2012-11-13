@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonApplication3TwitterTestStuff", "PythonApplication3TwitterTestStuff\PythonApplication3TwitterTestStuff.pyproj", "{E5A67FD3-6C6C-4189-8DF7-8BAFC69713DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5A67FD3-6C6C-4189-8DF7-8BAFC69713DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5A67FD3-6C6C-4189-8DF7-8BAFC69713DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
