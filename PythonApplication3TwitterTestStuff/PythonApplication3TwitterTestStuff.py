@@ -7,6 +7,8 @@ try:
     import cPickle
     import nltk
     import codecs
+    import sys
+    import time
 
     #Random import to test for raising and catching an exception
     #import nonExistingModule
@@ -55,7 +57,8 @@ class MiningTheSocialWebCh1(object):
                 returnValue = None
             else:
                 returnValue = self.fileHandle
-            #Don't fucking forget to return the filehandler to the calling function, else you will be wondering why self.fileHandle is 'None' there
+            # Don't forget to return the filehandler to the calling function, else you will be wondering
+            # why self.fileHandle is 'None' there
             return returnValue
 
     def performNltkFrequencyAnalysis(self, words):
@@ -63,6 +66,14 @@ class MiningTheSocialWebCh1(object):
         numOfWords=100
         print('%d most used words in the tweets are: %s'%(numOfWords,frequencyDistribution.keys()[:100]))
         print('%d least used words in the tweets are: %s'%(numOfWords,frequencyDistribution.keys()[-100:]))
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write(str (numOfWords) + ' most used words in the tweets are: ' +str(frequencyDistribution.keys()[:100]))
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write(str (numOfWords) + ' least used words in the tweets are: ' +str(frequencyDistribution.keys()[-100:]))
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write('*'*80)
+
+        self.fileHandle.close()
 
     def sendWordsToFile(self, words):
         fileHandle=open('myTwitterData.pickle','wb')
@@ -80,15 +91,24 @@ class MiningTheSocialWebCh1(object):
             words+=[w for w in t.split()]
             print (words)
             nos_of_tweets+=1
-        print ("nos of tweets is ", nos_of_tweets)
-
-        print ('Total number of words in all tweets analyzed: ',len(words))
-        print ('Total number of unique words in above tweets: ',len(set(words)))
-        print ('Lexical diversity = ',len(set(words))/float(len(words)))
-        print ('Avg nos of words per tweet: ',float(sum([ len(t.split()) for t in tweets ]))/float(len(words)))
-        print ('Avg nos of words per tweet: ',float(len(words))/nos_of_tweets)
-
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write ("nos of tweets is " + str(nos_of_tweets))
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write ('Total number of words in all tweets analyzed: '+ str(len(words)))
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write ('Total number of unique words in above tweets: '+ str(len(set(words))))
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write ('Lexical diversity = '+ str(len(set(words))/float(len(words))))
+        self.fileHandle.write('\n\n')
+        #self.fileHandle.write ('Avg nos of words per tweet: '+ str(float(sum([ len(t.split()) for t in tweets ]))/float(len(words))))
+        #self.fileHandle.write('\n\n')
+        self.fileHandle.write ('Avg nos of words per tweet: '+ str(float(len(words))/nos_of_tweets))
+        self.fileHandle.write('\n\n')
+        self.fileHandle.write('*'*80)
+        self.fileHandle.write('\n\n')
         self.sendWordsToFile(words)
+
+        #fileHandle closed in nltk analysis
 
 
     def twitterAPITestStuff(self):
@@ -107,16 +127,18 @@ class MiningTheSocialWebCh1(object):
         all_search_results=[]
         search_results=[]
         
-        self.fileName='C:\TwitterCrapDataFromPythonAPI'
+        self.fileName='C:\TwitterCrapDataFromPythonAPI'+time.strftime("%Y%m%d-%H%M%S")
         self.fileHandle = self.createAndOpenFile()
 
         for topics in list_of_topics:
             print (topics)
             for page in range(1,5):
                 #content = unicode(topics.strip(codecs.BOM_UTF8), 'utf-8')
-                
                 #parser.parse(StringIO.StringIO(content))
-                search_results.append(twitter_search.search(q=topics,rpp=100, page=page))
+                #encoding to UTF-8 is essential because of internationalization which may show non-english words
+                # output that are not parsable by urllib
+                search_results.append(twitter_search.search(q=topics.encode("utf-8"),rpp=10, page=page))
+                #Bandwidth forces me to use rpp=10...woule be better to use it as 100
                 #print (search_results)
                 #Output the entire json data to a file with proper formatting
                 self.fileHandle.write (json.dumps(search_results, sort_keys=True, indent=1))
@@ -126,20 +148,26 @@ class MiningTheSocialWebCh1(object):
                     for r in result['results']]
             print (tweets)
             self.fileHandle.write('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+            self.fileHandle.write('*'*80)
             #self.fileHandle.write(str(tweets))
         #Don't forget to colse the file opened above
-        self.fileHandle.close()
+        #self.fileHandle.close()
+        #Closed in lexicaldiversity()
         self.calculateLexicalDiversity(tweets)
-
-    
-
-
 
     def __init__(self):
         self.twitterAPITestStuff()
+        reload(sys)
+        sys.setdefaultencoding("utf-8")
+        
 
 def createInstanceForTesting():
-    classInstance=MiningTheSocialWebCh1()            
+    while True:
+        classInstance=MiningTheSocialWebCh1()
+        print ("Starting next round in 10s")
+        del classInstance
+        time.sleep(10)
 
 if __name__=='__main__':
     createInstanceForTesting()
+    
