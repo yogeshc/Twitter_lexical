@@ -127,7 +127,7 @@ class MiningTheSocialWebCh1(object):
         all_search_results=[]
         search_results=[]
         
-        self.fileName='C:\TwitterCrapDataFromPythonAPI'+time.strftime("%Y%m%d-%H%M%S")
+        self.fileName='TwitterCrapDataFromPythonAPI'+time.strftime("%Y%m%d-%H%M%S")
         self.fileHandle = self.createAndOpenFile()
 
         for topics in list_of_topics:
@@ -137,7 +137,7 @@ class MiningTheSocialWebCh1(object):
                 #parser.parse(StringIO.StringIO(content))
                 #encoding to UTF-8 is essential because of internationalization which may show non-english words
                 # output that are not parsable by urllib
-                search_results.append(twitter_search.search(q=topics.encode("utf-8"),rpp=10, page=page))
+                search_results.append(twitter_search.search(q=topics.encode("utf-8"),rpp=100, page=page))
                 #Bandwidth forces me to use rpp=10...woule be better to use it as 100
                 #print (search_results)
                 #Output the entire json data to a file with proper formatting
@@ -147,7 +147,7 @@ class MiningTheSocialWebCh1(object):
                     for result in search_results \
                     for r in result['results']]
             print (tweets)
-            self.fileHandle.write('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+            self.fileHandle.write('\n\n\n\n\n')
             self.fileHandle.write('*'*80)
             #self.fileHandle.write(str(tweets))
         #Don't forget to colse the file opened above
@@ -165,7 +165,6 @@ def createInstanceForTesting():
     while True:
         classInstance=MiningTheSocialWebCh1()
         print ("Starting next round in 10s")
-        del classInstance
         time.sleep(10)
 
 if __name__=='__main__':
