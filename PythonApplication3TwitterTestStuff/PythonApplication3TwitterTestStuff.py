@@ -9,10 +9,8 @@ try:
     import codecs
     import sys
     import time
-
     #Random import to test for raising and catching an exception
     #import nonExistingModule
-
 except ImportError as impErr:
     print ("Install the following from pypi before running this program:",impErr)
     print ("1. numpy")
@@ -26,8 +24,6 @@ class MiningTheSocialWebCh1(object):
     fileName=''
     fileHandle=None
 
-
-
     def networkxGraphTrialRun(self):
         """
         This function just creates a random networkx graph.
@@ -39,7 +35,6 @@ class MiningTheSocialWebCh1(object):
         print (myGraph.nodes())
         print (myGraph.edges())
 
-
     def createAndOpenFile(self):
         """
         Just creates/opens a file for writing data to store in file
@@ -47,8 +42,6 @@ class MiningTheSocialWebCh1(object):
         while self.fileHandle==None:
             if os.path.exists(self.fileName):
                 print("File %s already exists, Overwriting it."%(self.fileName))
-            
-        
             try:
                 self.fileHandle=open(self.fileName,'w')
                 fileHandle=self.fileHandle
@@ -72,7 +65,6 @@ class MiningTheSocialWebCh1(object):
         self.fileHandle.write(str (numOfWords) + ' least used words in the tweets are: ' +str(frequencyDistribution.keys()[-100:]))
         self.fileHandle.write('\n\n')
         self.fileHandle.write('*'*80)
-
         self.fileHandle.close()
 
     def sendWordsToFile(self, words):
@@ -81,8 +73,6 @@ class MiningTheSocialWebCh1(object):
         fileHandle.close()
         words=cPickle.load(open('myTwitterData.pickle'))
         self.performNltkFrequencyAnalysis(words)
-        
-
 
     def calculateLexicalDiversity(self, tweets):
         words=[]
@@ -107,9 +97,7 @@ class MiningTheSocialWebCh1(object):
         self.fileHandle.write('*'*80)
         self.fileHandle.write('\n\n')
         self.sendWordsToFile(words)
-
         #fileHandle closed in nltk analysis
-
 
     def twitterAPITestStuff(self):
         """
@@ -121,15 +109,12 @@ class MiningTheSocialWebCh1(object):
         world_trends = twitter_api.trends._(WORLD_WOE_ID) 
         list_of_topics = [ trend['name'] for trend in world_trends()[0]['trends'] ] # iterate through the trends
         print (list_of_topics)  
-
         #This calls the search twitter for obtaining tweets on the topics obtained above
         twitter_search = twitter.Twitter(domain="search.twitter.com")
         all_search_results=[]
         search_results=[]
-        
         self.fileName='TwitterCrapDataFromPythonAPI'+time.strftime("%Y%m%d-%H%M%S")
         self.fileHandle = self.createAndOpenFile()
-
         for topics in list_of_topics:
             print (topics)
             for page in range(1,5):
@@ -169,4 +154,3 @@ def createInstanceForTesting():
 
 if __name__=='__main__':
     createInstanceForTesting()
-    
